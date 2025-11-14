@@ -8,13 +8,24 @@
 
 using namespace std;
 
-namespace {
 void get_URL( const string& host, const string& path )
 {
-  debug( "Function called: get_URL( \"{}\", \"{}\" )", host, path );
-  debug( "get_URL() function not yet implemented" );
+  // cerr << "Function called: get_URL(" << host << ", " << path << ")\n";
+  // cerr << "Warning: get_URL() has not been implemented yet.\n";
+
+  Address addr = Address( host, "http" );
+  TCPSocket tcp_skt = TCPSocket();
+  tcp_skt.connect( addr );
+  tcp_skt.write( string( "GET " ) + path + string( " HTTP/1.1\r\n" ) );
+  tcp_skt.write( string( "Host: " ) + host + "\r\n" );
+  tcp_skt.write( string( "Connection: close\r\n\r\n" ) );
+  string buffer;
+  while ( !tcp_skt.eof() ) {
+    tcp_skt.read( buffer );
+    cout << buffer;
+  }
+  tcp_skt.close();
 }
-} // namespace
 
 int main( int argc, char* argv[] )
 {
